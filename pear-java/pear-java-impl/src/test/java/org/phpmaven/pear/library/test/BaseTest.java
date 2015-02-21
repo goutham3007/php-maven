@@ -18,6 +18,7 @@
  */
 
 package org.phpmaven.pear.library.test;
+import static org.junit.Assert.*;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -32,8 +33,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import junit.framework.Assert;
 
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
@@ -69,15 +68,15 @@ public class BaseTest extends AbstractTestCase {
 
 		final File pearFolder = new File("target/pear.php.net").getAbsoluteFile();
 		final IPearChannel channel = util.channelDiscoverLocal(pearFolder);
-		Assert.assertNotNull(channel);
-		Assert.assertNotNull(channel.getPrimaryServer());
-		Assert.assertTrue(channel.getMirrors().iterator().hasNext());
+		assertNotNull(channel);
+		assertNotNull(channel.getPrimaryServer());
+		assertTrue(channel.getMirrors().iterator().hasNext());
 		final String restServer = channel.getRestUrl(IPearChannel.REST_1_3);
-		Assert.assertNotNull(restServer);
-		Assert.assertEquals("file://" + pearFolder.getAbsolutePath() + "/rest/", restServer);
-		Assert.assertEquals("pear.php.net", channel.getName());
-		Assert.assertEquals("pear", channel.getSuggestedAlias());
-		Assert.assertEquals("PHP Extension and Application Repository", channel.getSummary());
+		assertNotNull(restServer);
+		assertEquals("file://" + pearFolder.getAbsolutePath() + "/rest/", restServer);
+		assertEquals("pear.php.net", channel.getName());
+		assertEquals("pear", channel.getSuggestedAlias());
+		assertEquals("PHP Extension and Application Repository", channel.getSummary());
 	}
 
 	/**
@@ -93,7 +92,7 @@ public class BaseTest extends AbstractTestCase {
 		channel.initializePackages(true, true);
 
 		final Iterable<IPackage> pkgs = channel.getKnownPackages();
-		Assert.assertNotNull(pkgs);
+		assertNotNull(pkgs);
 	}
 
 	/**
@@ -107,7 +106,7 @@ public class BaseTest extends AbstractTestCase {
 		final IPearChannel channel = getChannel(false);
 
 		final Iterable<IMaintainer> maintainers = channel.getMaintainers();
-		Assert.assertNotNull(maintainers);
+		assertNotNull(maintainers);
 	}
 
 	/**
@@ -124,7 +123,7 @@ public class BaseTest extends AbstractTestCase {
 		channel.initializePackages(true, false);
 
 		final Iterable<IPackage> pkgs = channel.getInstalledPackages();
-		Assert.assertNotNull(pkgs);
+		assertNotNull(pkgs);
 
 		final Iterator<IPackage> iter = pkgs.iterator();
 		final IPackage pkgArchiveTar = iter.next();
@@ -142,28 +141,28 @@ public class BaseTest extends AbstractTestCase {
 			while (iter.hasNext()) {
 				packages.append(iter.next().getPackageName() + "\n");
 			}
-			Assert.fail("Unexpected installed packages:\n" + packages);
+			fail("Unexpected installed packages:\n" + packages);
 		}
 
-		Assert.assertEquals("Archive_Tar", pkgArchiveTar.getPackageName());
-		Assert.assertNotNull(pkgArchiveTar.getInstalledVersion());
-		Assert.assertEquals("1.3.7", pkgArchiveTar.getInstalledVersion().getVersion().getPearVersion());
+		assertEquals("Archive_Tar", pkgArchiveTar.getPackageName());
+		assertNotNull(pkgArchiveTar.getInstalledVersion());
+		assertEquals("1.3.7", pkgArchiveTar.getInstalledVersion().getVersion().getPearVersion());
 
-		Assert.assertEquals("Console_Getopt", pkgConsoleGetopt.getPackageName());
-		Assert.assertNotNull(pkgConsoleGetopt.getInstalledVersion());
-		Assert.assertEquals("1.3.0", pkgConsoleGetopt.getInstalledVersion().getVersion().getPearVersion());
+		assertEquals("Console_Getopt", pkgConsoleGetopt.getPackageName());
+		assertNotNull(pkgConsoleGetopt.getInstalledVersion());
+		assertEquals("1.3.0", pkgConsoleGetopt.getInstalledVersion().getVersion().getPearVersion());
 
-		Assert.assertEquals("PEAR", pkgPEAR.getPackageName());
-		Assert.assertNotNull(pkgPEAR.getInstalledVersion());
-		Assert.assertEquals("1.9.4", pkgPEAR.getInstalledVersion().getVersion().getPearVersion());
+		assertEquals("PEAR", pkgPEAR.getPackageName());
+		assertNotNull(pkgPEAR.getInstalledVersion());
+		assertEquals("1.9.4", pkgPEAR.getInstalledVersion().getVersion().getPearVersion());
 
-		Assert.assertEquals("Structures_Graph", pkgStructuresGraph.getPackageName());
-		Assert.assertNotNull(pkgStructuresGraph.getInstalledVersion());
-		Assert.assertEquals("1.0.4", pkgStructuresGraph.getInstalledVersion().getVersion().getPearVersion());
+		assertEquals("Structures_Graph", pkgStructuresGraph.getPackageName());
+		assertNotNull(pkgStructuresGraph.getInstalledVersion());
+		assertEquals("1.0.4", pkgStructuresGraph.getInstalledVersion().getVersion().getPearVersion());
 
-		Assert.assertEquals("XML_Util", pkgXmlUtil.getPackageName());
-		Assert.assertNotNull(pkgXmlUtil.getInstalledVersion());
-		Assert.assertEquals("1.2.1", pkgXmlUtil.getInstalledVersion().getVersion().getPearVersion());
+		assertEquals("XML_Util", pkgXmlUtil.getPackageName());
+		assertNotNull(pkgXmlUtil.getInstalledVersion());
+		assertEquals("1.2.1", pkgXmlUtil.getInstalledVersion().getVersion().getPearVersion());
 	}
 
 	/**
@@ -178,12 +177,12 @@ public class BaseTest extends AbstractTestCase {
 
 		channel.getKnownPackages();
 		final IPackage pkg = channel.getPackage("Net_SSH2");
-		Assert.assertNotNull(pkg);
+		assertNotNull(pkg);
 
 		try {
 			// will fail because the package cannot be read
 			pkg.getKnownVersions();
-			Assert.fail("Expected failures because not all packages are available");
+			fail("Expected failures because not all packages are available");
 		} catch (PhpException ex) {
 			// succeeds
 		}
@@ -201,23 +200,23 @@ public class BaseTest extends AbstractTestCase {
 		channel.initializePackages(true, true);
 
 		final IPackage pkg = channel.getPackage("Archive_Tar");
-		Assert.assertNotNull(pkg.getVersion("1.3.9"));
-		Assert.assertNotNull(pkg.getVersion("1.3.8"));
-		Assert.assertNotNull(pkg.getVersion("1.3.7"));
-		Assert.assertNotNull(pkg.getVersion("1.3.6"));
-		Assert.assertNotNull(pkg.getVersion("1.3.5"));
-		Assert.assertNotNull(pkg.getVersion("1.3.4"));
-		Assert.assertNotNull(pkg.getVersion("1.3.3"));
-		Assert.assertNotNull(pkg.getVersion("1.3.2"));
-		Assert.assertNotNull(pkg.getVersion("1.3.1"));
-		Assert.assertNotNull(pkg.getVersion("1.3.0"));
-		Assert.assertNotNull(pkg.getVersion("1.2"));
-		Assert.assertNotNull(pkg.getVersion("1.1"));
-		Assert.assertNotNull(pkg.getVersion("1.0"));
-		Assert.assertNotNull(pkg.getVersion("0.10-b1"));
-		Assert.assertNotNull(pkg.getVersion("0.9"));
-		Assert.assertNotNull(pkg.getVersion("0.4"));
-		Assert.assertNotNull(pkg.getVersion("0.3"));
+		assertNotNull(pkg.getVersion("1.3.9"));
+		assertNotNull(pkg.getVersion("1.3.8"));
+		assertNotNull(pkg.getVersion("1.3.7"));
+		assertNotNull(pkg.getVersion("1.3.6"));
+		assertNotNull(pkg.getVersion("1.3.5"));
+		assertNotNull(pkg.getVersion("1.3.4"));
+		assertNotNull(pkg.getVersion("1.3.3"));
+		assertNotNull(pkg.getVersion("1.3.2"));
+		assertNotNull(pkg.getVersion("1.3.1"));
+		assertNotNull(pkg.getVersion("1.3.0"));
+		assertNotNull(pkg.getVersion("1.2"));
+		assertNotNull(pkg.getVersion("1.1"));
+		assertNotNull(pkg.getVersion("1.0"));
+		assertNotNull(pkg.getVersion("0.10-b1"));
+		assertNotNull(pkg.getVersion("0.9"));
+		assertNotNull(pkg.getVersion("0.4"));
+		assertNotNull(pkg.getVersion("0.3"));
 	}
 
 	/**
@@ -233,20 +232,20 @@ public class BaseTest extends AbstractTestCase {
 
 		IPackage pkg = channel.getPackage("Archive_Tar");
 		IPackageVersion version = pkg.getVersion("0.3");
-		Assert.assertEquals("Tar file management class", version.getSummary());
-		Assert.assertEquals("This class provides handling of tar files in PHP.\n"
+		assertEquals("Tar file management class", version.getSummary());
+		assertEquals("This class provides handling of tar files in PHP.\n"
 				+ "It supports creating, listing, extracting and adding to tar files.\n"
 				+ "Gzip support is available if PHP has the zlib extension built-in or\n" + "loaded.",
 				version.getDescription());
 
 		pkg = channel.getPackage("PHPUnit");
 		version = pkg.getVersion("1.3.2");
-		Assert.assertEquals("! Changed license from PHP License to BSD Style License.", version.getReleaseNotes());
-		Assert.assertEquals("2005-11-10 00:00:00", version.getReleaseDate());
-		// TODO Assert.assertEquals("BSD License", version.getLicense());
-		Assert.assertEquals("stable", version.getStability());
-		Assert.assertNotNull(version.getMaintainers());
-		Assert.assertTrue(version.getMaintainers().iterator().hasNext());
+		assertEquals("! Changed license from PHP License to BSD Style License.", version.getReleaseNotes());
+		assertEquals("2005-11-10 00:00:00", version.getReleaseDate());
+		// TODO assertEquals("BSD License", version.getLicense());
+		assertEquals("stable", version.getStability());
+		assertNotNull(version.getMaintainers());
+		assertTrue(version.getMaintainers().iterator().hasNext());
 	}
 
 	/**
@@ -261,16 +260,16 @@ public class BaseTest extends AbstractTestCase {
 		final IPearChannel channel = util.lookupChannel("pear");
 		final IPackage pkg = channel.getPackage("Validate_AT");
 		final IPackageVersion version = pkg.getVersion("0.5.2");
-		Assert.assertNull(pkg.getInstalledVersion());
+		assertNull(pkg.getInstalledVersion());
 		version.install();
-		Assert.assertEquals("0.5.2", pkg.getInstalledVersion().getVersion().getPearVersion());
+		assertEquals("0.5.2", pkg.getInstalledVersion().getVersion().getPearVersion());
 
-		Assert.assertTrue(channel.getPearUtility().getPhpDir().getAbsolutePath()
+		assertTrue(channel.getPearUtility().getPhpDir().getAbsolutePath()
 				.startsWith(channel.getPearUtility().getInstallDir().getAbsolutePath()));
 		final Iterable<String> files = version.getPhpFiles();
 		for (final String fname : files) {
 			final File file = new File(channel.getPearUtility().getPhpDir(), fname);
-			Assert.assertTrue(file.exists());
+			assertTrue(file.exists());
 		}
 	}
 
@@ -301,7 +300,7 @@ public class BaseTest extends AbstractTestCase {
 					// are referred in the pear channel but do not exist. mostly early versions.
 					// all non-FileNotFoundException will be rethrown to let the test case fail
 					if (!(ex.getCause() instanceof FileNotFoundException)) {
-						Assert.fail("failed analysing package " + pkg.getPackageName() + "/"
+						fail("failed analysing package " + pkg.getPackageName() + "/"
 								+ version.getVersion().getPearVersion() + " -> cause: " + ex.getClass().getName() + "/"
 								+ ex.toString());
 					}
@@ -318,15 +317,15 @@ public class BaseTest extends AbstractTestCase {
 	 */
 	@Test
 	public void testVersionMapping() throws Exception {
-		Assert.assertEquals("0.10-beta-1", PackageHelper.convertPearVersionToMavenVersion("0.10-b1"));
-		Assert.assertEquals("1.5.0-RC1", PackageHelper.convertPearVersionToMavenVersion("1.5.0RC1"));
-		Assert.assertEquals("1.3.0-r3", PackageHelper.convertPearVersionToMavenVersion("1.3.0r3"));
-		Assert.assertEquals("2.0.0-dev1", PackageHelper.convertPearVersionToMavenVersion("2.0.0dev1"));
-		Assert.assertEquals("1.2.2-beta-1", PackageHelper.convertPearVersionToMavenVersion("1.2.2beta1"));
-		Assert.assertEquals("0.9.7-dev", PackageHelper.convertPearVersionToMavenVersion("0.9.7dev"));
-		Assert.assertEquals("0.5.2-beta", PackageHelper.convertPearVersionToMavenVersion("0.5.2beta"));
-		Assert.assertEquals("1.4-beta-1", PackageHelper.convertPearVersionToMavenVersion("1.4b1"));
-		Assert.assertEquals("1.5.0-alpha-1", PackageHelper.convertPearVersionToMavenVersion("1.5.0a1"));
+		assertEquals("0.10-beta-1", PackageHelper.convertPearVersionToMavenVersion("0.10-b1"));
+		assertEquals("1.5.0-RC1", PackageHelper.convertPearVersionToMavenVersion("1.5.0RC1"));
+		assertEquals("1.3.0-r3", PackageHelper.convertPearVersionToMavenVersion("1.3.0r3"));
+		assertEquals("2.0.0-dev1", PackageHelper.convertPearVersionToMavenVersion("2.0.0dev1"));
+		assertEquals("1.2.2-beta-1", PackageHelper.convertPearVersionToMavenVersion("1.2.2beta1"));
+		assertEquals("0.9.7-dev", PackageHelper.convertPearVersionToMavenVersion("0.9.7dev"));
+		assertEquals("0.5.2-beta", PackageHelper.convertPearVersionToMavenVersion("0.5.2beta"));
+		assertEquals("1.4-beta-1", PackageHelper.convertPearVersionToMavenVersion("1.4b1"));
+		assertEquals("1.5.0-alpha-1", PackageHelper.convertPearVersionToMavenVersion("1.5.0a1"));
 	}
 
 	/**
@@ -349,30 +348,30 @@ public class BaseTest extends AbstractTestCase {
 		pkg = channel.getPackage("HTML_QuickForm2");
 		version = pkg.getVersion("0.3.0");
 		dataFiles = version.getFiles(IPackageVersion.FILE_ROLE_DATA).iterator();
-		Assert.assertEquals("HTML_QuickForm2/data/quickform.css", dataFiles.next());
-		Assert.assertFalse(dataFiles.hasNext());
+		assertEquals("HTML_QuickForm2/data/quickform.css", dataFiles.next());
+		assertFalse(dataFiles.hasNext());
 
 		pkg = channel.getPackage("Net_DNSBL");
 		version = pkg.getVersion("1.3.6");
 		docFiles = version.getFiles(IPackageVersion.FILE_ROLE_DOC).iterator();
-		Assert.assertEquals("Net_DNSBL/examples/check_dnsbl", docFiles.next());
-		Assert.assertFalse(docFiles.hasNext());
+		assertEquals("Net_DNSBL/examples/check_dnsbl", docFiles.next());
+		assertFalse(docFiles.hasNext());
 
 		pkg = channel.getPackage("HTML_QuickForm2");
 		version = pkg.getVersion("0.4.0");
 		dataFiles = version.getFiles(IPackageVersion.FILE_ROLE_DATA).iterator();
-		Assert.assertEquals("HTML_QuickForm2/quickform.css", dataFiles.next());
-		Assert.assertFalse(dataFiles.hasNext());
+		assertEquals("HTML_QuickForm2/quickform.css", dataFiles.next());
+		assertFalse(dataFiles.hasNext());
 		docFiles = version.getFiles(IPackageVersion.FILE_ROLE_DOC).iterator();
 		while (docFiles.hasNext()) {
-			Assert.assertTrue(docFiles.next().startsWith("HTML_QuickForm2/examples/"));
+			assertTrue(docFiles.next().startsWith("HTML_QuickForm2/examples/"));
 		}
 
 		pkg = channel.getPackage("pearweb_channelxml");
 		version = pkg.getVersion("1.13.0");
 		dataFiles = version.getFiles(IPackageVersion.FILE_ROLE_WWW).iterator();
 		while (dataFiles.hasNext()) {
-			Assert.assertTrue(dataFiles.next().startsWith("public_html/"));
+			assertTrue(dataFiles.next().startsWith("public_html/"));
 		}
 
 		pkg = channel.getPackage("Genealogy_Gedcom");
@@ -380,33 +379,33 @@ public class BaseTest extends AbstractTestCase {
 		phpFiles = version.getFiles(IPackageVersion.FILE_ROLE_PHP).iterator();
 		while (phpFiles.hasNext()) {
 			final String file = phpFiles.next();
-			Assert.assertTrue(file.startsWith("Genealogy/Gedcom/") || "Genealogy/Gedcom.php".equals(file));
+			assertTrue(file.startsWith("Genealogy/Gedcom/") || "Genealogy/Gedcom.php".equals(file));
 		}
 
 		pkg = channel.getPackage("Crypt_Xtea");
 		version = pkg.getVersion("1.1.0RC1");
 		phpFiles = version.getFiles(IPackageVersion.FILE_ROLE_PHP).iterator();
-		Assert.assertEquals("Crypt/Xtea.php", phpFiles.next());
-		Assert.assertFalse(phpFiles.hasNext());
+		assertEquals("Crypt/Xtea.php", phpFiles.next());
+		assertFalse(phpFiles.hasNext());
 		docFiles = version.getFiles(IPackageVersion.FILE_ROLE_DOC).iterator();
-		Assert.assertEquals("Crypt_Xtea/README", docFiles.next());
-		Assert.assertFalse(docFiles.hasNext());
+		assertEquals("Crypt_Xtea/README", docFiles.next());
+		assertFalse(docFiles.hasNext());
 
 		pkg = channel.getPackage("Structures_BibTex");
 		version = pkg.getVersion("0.1.0");
 		phpFiles = version.getFiles(IPackageVersion.FILE_ROLE_PHP).iterator();
-		Assert.assertEquals("Structures/BibTex.php", phpFiles.next());
-		Assert.assertFalse(phpFiles.hasNext());
+		assertEquals("Structures/BibTex.php", phpFiles.next());
+		assertFalse(phpFiles.hasNext());
 		docFiles = version.getFiles(IPackageVersion.FILE_ROLE_DOC).iterator();
-		Assert.assertEquals("Structures_BibTex/examples/Structures_BibTex_example.php", docFiles.next());
-		Assert.assertFalse(docFiles.hasNext());
+		assertEquals("Structures_BibTex/examples/Structures_BibTex_example.php", docFiles.next());
+		assertFalse(docFiles.hasNext());
 
 		pkg = channel.getPackage("PHP_CodeSniffer");
 		version = pkg.getVersion("0.0.5");
 		phpFiles = version.getFiles(IPackageVersion.FILE_ROLE_PHP).iterator();
 		while (phpFiles.hasNext()) {
 			final String file = phpFiles.next();
-			Assert.assertTrue(file.startsWith("PHP/CodeSniffer/") || "PHP/CodeSniffer.php".equals(file));
+			assertTrue(file.startsWith("PHP/CodeSniffer/") || "PHP/CodeSniffer.php".equals(file));
 		}
 	}
 
@@ -447,11 +446,16 @@ public class BaseTest extends AbstractTestCase {
 	 */
 	private void unzip(File zipFile, File destDir) throws IOException {
 		final ZipFile zip = new ZipFile(zipFile);
-
-		final Enumeration<? extends ZipEntry> items = zip.entries();
-		while (items.hasMoreElements()) {
-			final ZipEntry entry = items.nextElement();
-			unpackZipEntry(entry, zip.getInputStream(entry), destDir);
+		try {	
+			final Enumeration<? extends ZipEntry> items = zip.entries();
+			while (items.hasMoreElements()) {
+				final ZipEntry entry = items.nextElement();
+				unpackZipEntry(entry, zip.getInputStream(entry), destDir);
+			}
+		} finally  {
+			if(zip != null){
+				zip.close();
+			}
 		}
 	}
 

@@ -110,7 +110,7 @@ public class LintThread implements Runnable {
     @Override
     public void run() {
         try {
-            IPhpExecutable exec = null;
+            IPhpExecutable exec = null; 
             try {
                 final IPhpExecutableConfiguration config =
                         this.factory.lookup(IPhpExecutableConfiguration.class, this.executableConfig, session);
