@@ -1,0 +1,23 @@
+
+pipeline{
+    agent "any"
+    
+    
+    stages{
+        
+        stage("Checkout code"){
+            steps{
+                git branch: 'main', url: 'https://github.com/goutham3007/php-maven.git'    
+            }
+        }
+
+        stage ('build and package'){
+            steps{
+                sh script: 'mvn clean package'
+            }
+        }
+
+
+ }
+
+}
